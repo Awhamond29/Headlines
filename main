@@ -1,0 +1,33 @@
+import openpyxl
+
+workbook = openpyxl.load_workbook('Headlines.xlsx', data_only=True)  # Use data_only=True to read cell values, not formulas
+
+# Select the worksheet by name
+sheet = workbook['Sheet1']
+
+tickerList = []
+headlineList = []
+
+
+# Loop through rows and extract data
+for row in sheet.iter_rows(values_only=True):
+    tickerList.append(str(row[0]))
+    headlineList.append(str(row[1]))
+
+#Print the extracted data
+#print("Ticker List:", tickerList)
+#print("Company List:", companyList)
+#print("Industry List:", industryList)
+def print_hi(name):
+    # Use a breakpoint in the code line below to debug your script.
+    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    print_hi('PyCharm')
+
+    # Print the extracted data
+    print("Ticker List:", tickerList)
+    print("Company List:", headlineList)
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/
