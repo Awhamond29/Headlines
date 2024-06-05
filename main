@@ -1,4 +1,6 @@
 import openpyxl
+import random
+import time
 
 workbook = openpyxl.load_workbook('Headlines.xlsx', data_only=True)  # Use data_only=True to read cell values, not formulas
 
@@ -8,26 +10,36 @@ sheet = workbook['Sheet1']
 tickerList = []
 headlineList = []
 
+def choose_headline(tickers, headlines, indices):
+    int = random.choice(indices)
+    return f'{tickers[int]} | {headlines[int]}', int
 
+def game(tickers, headlines):
+    count = 0
+    total = len(tickers) - 1
+    indices = [x for x in range(len(tickers))]
+    while True:
+        object = choose_headline(tickers,headlines, indices)
+        print(object[0])
+        indices.remove(object[1])
+        count += 1
+        if count == total:
+            break
+        time.sleep(5)
 # Loop through rows and extract data
 for row in sheet.iter_rows(values_only=True):
-    tickerList.append(str(row[0]))
-    headlineList.append(str(row[1]))
+    ticker, headline = str(row[0]), str(row[1])
+    if ticker != 'None':
+        tickerList.append(ticker)
+        headlineList.append(headline)
 
-#Print the extracted data
-#print("Ticker List:", tickerList)
-#print("Company List:", companyList)
-#print("Industry List:", industryList)
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
 
-    # Print the extracted data
-    print("Ticker List:", tickerList)
-    print("Company List:", headlineList)
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    #Print the extracted data
+    #print("Ticker List:", tickerList)
+    #print("Headline List", headlineList)
+    game(tickerList, headlineList)
