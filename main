@@ -1,3 +1,8 @@
+# This is a sample Python script.
+
+# Press ⌃R to execute it or replace it with your code.
+# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+
 import openpyxl
 import random
 import time
@@ -9,29 +14,62 @@ sheet = workbook['Sheet1']
 
 tickerList = []
 headlineList = []
+commandList = []
 
+
+# Loop through rows and extract data
+for row in sheet.iter_rows(values_only=True):
+    ticker, headline, command = str(row[0]), str(row[1]), str(row[2])
+    if ticker != 'None':
+        tickerList.append(ticker)
+        headlineList.append(headline)
+        commandList.append(command)
 def choose_headline(tickers, headlines, indices):
     int = random.choice(indices)
     return f'{tickers[int]} | {headlines[int]}', int
 
-def game(tickers, headlines):
+def game(tickers, headlines, commands):
     count = 0
-    total = len(tickers) - 1
+    total = 25
     indices = [x for x in range(len(tickers))]
+    times = []
+    accuracy = 0
     while True:
+        start_time = time.time()
         object = choose_headline(tickers,headlines, indices)
         print(object[0])
+        ans = input("ticker: ")
+        if ans.upper() == object[0][0:len(ans)]:
+            accuracy += 1
+        ans = input("command: ")
+        if commands[object[1]] == 'M':
+            if ans == commands[object[1]]:
+                accuracy += 1
+            elif ans == 'J':
+                accuracy += .5
+        elif commands[object[1]] == 'J':
+            if ans == commands[object[1]]:
+                accuracy += 1
+            elif ans == 'M':
+                accuracy += .5
+        elif commands[object[1]] == 'V':
+            if ans == commands[object[1]]:
+                accuracy += 1
+            elif ans == 'F':
+                accuracy += .5
+        else:
+            if ans == commands[object[1]]:
+                accuracy += 1
+            elif ans == 'V':
+                accuracy += .5
+        end_time = time.time()
+        times.append(end_time - start_time)
         indices.remove(object[1])
         count += 1
         if count == total:
             break
-        time.sleep(5)
-# Loop through rows and extract data
-for row in sheet.iter_rows(values_only=True):
-    ticker, headline = str(row[0]), str(row[1])
-    if ticker != 'None':
-        tickerList.append(ticker)
-        headlineList.append(headline)
+    print(f'avg time: {sum(times) / len(times)}')
+    print(f'accuracy: {accuracy / (total*2)}')
 
 
 
@@ -42,4 +80,5 @@ if __name__ == '__main__':
     #Print the extracted data
     #print("Ticker List:", tickerList)
     #print("Headline List", headlineList)
-    game(tickerList, headlineList)
+    #print("Command List", commandList)
+    game(tickerList, headlineList, commandList)
